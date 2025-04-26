@@ -39,4 +39,50 @@ class Spring6jdbc3ApplicationTests {
             System.out.println("Speaker name: " + speaker.getName());
         }
     }
+
+    // No change except String concat
+    @Test
+    void testGetSpeakersWithSkill() {
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<List<Speaker>> speakersResponse = restTemplate.exchange(
+                "http://localhost:8080/speaker", HttpMethod.GET,
+                null, new ParameterizedTypeReference<List<Speaker>>() {
+                });
+
+        assertTrue(speakersResponse.getBody() != null, "Body is null");
+
+        List<Speaker> speakers = speakersResponse.getBody();
+
+        for (Speaker speaker : speakers) {
+            System.out.println("Speaker name: " + speaker.getName() + " Skill:" + speaker.getSkill());
+        }
+    }
+
+    @Test
+    void testGetSpeaker() {
+        RestTemplate restTemplate = new RestTemplate();
+        Speaker speaker = restTemplate.getForObject("http://localhost:8080/speaker/{id}", Speaker.class, 28);
+        System.out.println(speaker.getName());
+    }
+
+    @Test
+    void testUpdateSpeaker() {
+        RestTemplate restTemplate = new RestTemplate();
+
+        //Fetch speaker
+        Speaker speaker = restTemplate.getForObject("http://localhost:8080/speaker/{id}", Speaker.class, 29);
+        System.out.println("Speaker name before update: " + speaker.getName());
+
+        //Update
+        speaker.setName(speaker.getName() + " Sr.");
+        restTemplate.put("http://localhost:8080/speaker", speaker);
+        System.out.println("Speaker name after update: " + speaker.getName());
+    }
+
+    @Test
+    void testUpdateBatch() {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getForObject("http://localhost:8080/speaker/batch", Object.class);
+    }
 }

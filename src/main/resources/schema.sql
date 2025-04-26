@@ -4,3 +4,5 @@ set schema spring6jdbc3;
 
 create table if not exists speaker (id IDENTITY Not null primary key,
 name varchar (100) not null);
+
+ALTER TABLE speaker ADD COLUMN IF NOT EXISTS skill VARCHAR(100);
