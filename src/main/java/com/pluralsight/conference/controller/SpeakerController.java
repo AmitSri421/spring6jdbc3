@@ -1,8 +1,13 @@
 package com.pluralsight.conference.controller;
 
+import com.pluralsight.conference.ServiceError;
 import com.pluralsight.conference.model.Speaker;
 import com.pluralsight.conference.service.SpeakerService;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,5 +58,16 @@ public class SpeakerController {
     public Object deleteSpeaker(@PathVariable(value = "id") int id) {
         speakerService.delete(id);
         return null;
+    }
+
+    @GetMapping("/speaker/test")
+    public void test() {
+        throw new DataAccessException("Testing exception thrown") {};
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ServiceError> handleException(RuntimeException ex) {
+        ServiceError error = new ServiceError(HttpStatus.OK.value(), ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.OK);
     }
 }
