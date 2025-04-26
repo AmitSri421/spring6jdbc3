@@ -2,6 +2,7 @@ package com.pluralsight.conference.controller;
 
 import com.pluralsight.conference.model.Speaker;
 import com.pluralsight.conference.service.SpeakerService;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,6 +46,12 @@ public class SpeakerController {
     @GetMapping("/speaker/batch")
     public Object batch() {
         speakerService.batch();
+        return null;
+    }
+
+    @DeleteMapping("/speaker/delete/{id}")
+    public Object deleteSpeaker(@PathVariable(value = "id") int id) {
+        speakerService.delete(id);
         return null;
     }
 }
